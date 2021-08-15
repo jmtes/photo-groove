@@ -44,6 +44,9 @@ view model =
     in
     div [ class "content" ]
         [ h1 [] [ text "Photo Groove" ]
+        , button
+            [ onClick { description = "ClickedSurpriseMe", data = "" } ]
+            [ text "Surprise Me!" ]
         , div [ id "thumbnails" ]
             (List.map (viewThumbnail selected) photos)
         , img [ class "large", src (urlPrefix ++ "large/" ++ selected) ] []
@@ -111,6 +114,9 @@ update : Msg -> Model -> Model
 update msg model =
     if msg.description == "ClickedPhoto" then
         { model | selectedUrl = msg.data }
+
+    else if msg.description == "ClickedSurpriseMe" then
+        { model | selectedUrl = "2.jpeg" }
 
     else
         model

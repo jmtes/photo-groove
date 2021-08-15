@@ -35,7 +35,7 @@ view model =
     div [ class "content" ]
         [ h1 [] [ text "Photo Groove" ]
         , div [ id "thumbnails" ]
-            (List.map (\photo -> viewThumbnail selected photo) photos)
+            (List.map (viewThumbnail selected) photos)
         , img [ class "large", src (urlPrefix ++ "large/" ++ selected) ] []
         ]
 

@@ -16,8 +16,10 @@ module PhotoGroove exposing (main)
 -- but it's best to try to be as specific as possible with your imports to
 -- prevent name ambiguity and confusion
 
+import Browser
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Html.Events exposing (onClick)
 
 
 urlPrefix =
@@ -48,6 +50,7 @@ viewThumbnail selectedUrl thumb =
     img
         [ src (urlPrefix ++ url)
         , classList [ ( "selected", url == selectedUrl ) ]
+        , onClick { description = "ClickedPhoto", data = url }
         ]
         []
 
@@ -71,4 +74,4 @@ update msg model =
 
 
 main =
-    view initialModel
+    Browser.sandbox { init = initialModel, view = view, update = update }

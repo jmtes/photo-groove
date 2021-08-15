@@ -26,6 +26,11 @@ urlPrefix =
     "http://elm-in-action.com/"
 
 
+
+-- View function takes a model and returns a list of Html nodes
+-- User events such as clicks are translated into message values
+
+
 view model =
     let
         photos =
@@ -42,6 +47,11 @@ view model =
         ]
 
 
+
+-- When the user clicks a photo, a record with fields `description`
+-- and `data` are sent to the update function.
+
+
 viewThumbnail selectedUrl thumb =
     let
         url =
@@ -55,6 +65,10 @@ viewThumbnail selectedUrl thumb =
         []
 
 
+
+-- Model represents app state
+
+
 initialModel =
     { photos =
         [ { url = "1.jpeg" }
@@ -65,12 +79,23 @@ initialModel =
     }
 
 
+
+-- Messages are fed into the update function to produce new models
+-- After an update, the new model is sent to the view function to determine
+-- the new DOM
+
+
 update msg model =
     if msg.description == "ClickedPhoto" then
         { model | selectedUrl = msg.data }
 
     else
         model
+
+
+
+-- Browser.sandbox wires together your state, how the page should look
+-- depending on the state, and how changes can be made to the state
 
 
 main =

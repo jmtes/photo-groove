@@ -16,6 +16,7 @@ module PhotoGroove exposing (main)
 -- but it's best to try to be as specific as possible with your imports to
 -- prevent name ambiguity and confusion
 
+import Array exposing (Array)
 import Browser
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -77,8 +78,12 @@ viewThumbnail selectedUrl thumb =
 -- Model represents app state
 
 
+type alias Photo =
+    { url : String }
+
+
 type alias Model =
-    { photos : List { url : String }, selectedUrl : String }
+    { photos : List Photo, selectedUrl : String }
 
 
 initialModel : Model
@@ -90,6 +95,11 @@ initialModel =
         ]
     , selectedUrl = "1.jpeg"
     }
+
+
+photoArray : Array Photo
+photoArray =
+    Array.fromList initialModel.photos
 
 
 

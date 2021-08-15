@@ -33,9 +33,7 @@ urlPrefix =
 -- User events such as clicks are translated into message values
 
 
-view :
-    { photos : List { url : String }, selectedUrl : String }
-    -> Html Msg
+view : { photos : List Photo, selectedUrl : String } -> Html Msg
 view model =
     let
         photos =
@@ -57,10 +55,7 @@ view model =
 -- and `data` are sent to the update function.
 
 
-viewThumbnail :
-    String
-    -> { url : String }
-    -> Html Msg
+viewThumbnail : String -> Photo -> Html Msg
 viewThumbnail selectedUrl thumb =
     let
         url =

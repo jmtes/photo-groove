@@ -112,14 +112,22 @@ type alias Msg =
 
 update : Msg -> Model -> Model
 update msg model =
-    if msg.description == "ClickedPhoto" then
-        { model | selectedUrl = msg.data }
+    let
+        desc =
+            msg.description
 
-    else if msg.description == "ClickedSurpriseMe" then
-        { model | selectedUrl = "2.jpeg" }
+        data =
+            msg.data
+    in
+    case desc of
+        "ClickedPhoto" ->
+            { model | selectedUrl = data }
 
-    else
-        model
+        "ClickedSurpriseMe" ->
+            { model | selectedUrl = "2.jpeg" }
+
+        _ ->
+            model
 
 
 

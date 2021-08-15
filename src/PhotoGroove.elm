@@ -25,21 +25,41 @@ urlPrefix =
 
 
 view model =
+    let
+        photos =
+            model.photos
+
+        selected =
+            model.selectedUrl
+    in
     div [ class "content" ]
         [ h1 [] [ text "Photo Groove" ]
-        , div [ id "thumbnails" ] (List.map viewThumbnail model)
+        , div [ id "thumbnails" ]
+            (List.map (\photo -> viewThumbnail selected photo) photos)
+        , img [ class "large", src (urlPrefix ++ "large/" ++ selected) ] []
         ]
 
 
-viewThumbnail thumb =
-    img [ src (urlPrefix ++ thumb.url) ] []
+viewThumbnail selectedUrl thumb =
+    let
+        url =
+            thumb.url
+    in
+    img
+        [ src (urlPrefix ++ url)
+        , classList [ ( "selected", url == selectedUrl ) ]
+        ]
+        []
 
 
 initialModel =
-    [ { url = "1.jpeg" }
-    , { url = "2.jpeg" }
-    , { url = "3.jpeg" }
-    ]
+    { photos =
+        [ { url = "1.jpeg" }
+        , { url = "2.jpeg" }
+        , { url = "3.jpeg" }
+        ]
+    , selectedUrl = "1.jpeg"
+    }
 
 
 main =

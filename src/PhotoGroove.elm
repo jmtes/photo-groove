@@ -22,6 +22,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
 
 
+urlPrefix : String
 urlPrefix =
     "http://elm-in-action.com/"
 
@@ -31,6 +32,9 @@ urlPrefix =
 -- User events such as clicks are translated into message values
 
 
+view :
+    { photos : List { url : String }, selectedUrl : String }
+    -> Html Msg
 view model =
     let
         photos =
@@ -52,6 +56,10 @@ view model =
 -- and `data` are sent to the update function.
 
 
+viewThumbnail :
+    String
+    -> { url : String }
+    -> Html Msg
 viewThumbnail selectedUrl thumb =
     let
         url =
@@ -69,6 +77,11 @@ viewThumbnail selectedUrl thumb =
 -- Model represents app state
 
 
+type alias Model =
+    { photos : List { url : String }, selectedUrl : String }
+
+
+initialModel : Model
 initialModel =
     { photos =
         [ { url = "1.jpeg" }
@@ -85,6 +98,11 @@ initialModel =
 -- the new DOM
 
 
+type alias Msg =
+    { description : String, data : String }
+
+
+update : Msg -> Model -> Model
 update msg model =
     if msg.description == "ClickedPhoto" then
         { model | selectedUrl = msg.data }
@@ -98,5 +116,6 @@ update msg model =
 -- depending on the state, and how changes can be made to the state
 
 
+main : Program () Model Msg
 main =
     Browser.sandbox { init = initialModel, view = view, update = update }

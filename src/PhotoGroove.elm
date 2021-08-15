@@ -9,13 +9,14 @@
 module PhotoGroove exposing (main)
 
 -- Import other modules
--- By specifying which values we're exposing from Html, we can call `div`, etc.
--- without having to prefix it with `Html.`
--- We're exposing *all* exports from `Html.Attributes` into the global scope
--- This is how we can call functions like `class` without needing to prepend
--- it with `HtmlAttributes.`
+-- We're exposing *all* exports from `Html` into the global scope
+-- This is how we can call functions like `div` without needing to prepend
+-- it with `Html.`
+-- In this case, exposing everything from Html and Html.Atributes is fine,
+-- but it's best to try to be as specific as possible with your imports to
+-- prevent name ambiguity and confusion
 
-import Html exposing (div, h1, img, text)
+import Html exposing (..)
 import Html.Attributes exposing (..)
 
 

@@ -81,7 +81,7 @@ type alias Photo =
 
 
 type alias Model =
-    { photos : List Photo, selectedUrl : String }
+    { photos : List Photo, selectedUrl : String, chosenSize : ThumbnailSize }
 
 
 initialModel : Model
@@ -92,12 +92,19 @@ initialModel =
         , { url = "3.jpeg" }
         ]
     , selectedUrl = "1.jpeg"
+    , chosenSize = Medium
     }
 
 
 photoArray : Array Photo
 photoArray =
     Array.fromList initialModel.photos
+
+
+type ThumbnailSize
+    = Small
+    | Medium
+    | Large
 
 
 

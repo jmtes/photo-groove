@@ -41,6 +41,9 @@ view model =
 
         selected =
             model.selectedUrl
+
+        size =
+            model.chosenSize
     in
     div [ class "content" ]
         [ h1 [] [ text "Photo Groove" ]
@@ -51,7 +54,7 @@ view model =
         , div
             [ id "choose-size" ]
             (List.map viewSizeChooser [ Small, Medium, Large ])
-        , div [ id "thumbnails" ]
+        , div [ id "thumbnails", class (sizeToClass size) ]
             (List.map (viewThumbnail selected) photos)
         , img [ class "large", src (urlPrefix ++ "large/" ++ selected) ] []
         ]
@@ -94,6 +97,19 @@ sizeToString size =
 
         Medium ->
             "medium"
+
+        Large ->
+            "large"
+
+
+sizeToClass : ThumbnailSize -> String
+sizeToClass size =
+    case size of
+        Small ->
+            "small"
+
+        Medium ->
+            "med"
 
         Large ->
             "large"

@@ -166,8 +166,8 @@ type ThumbnailSize
 -- Just are the only ways to obtain a Maybe
 
 
-getPhotoAtIndex : Int -> String
-getPhotoAtIndex index =
+getPhotoUrlAtIndex : Int -> String
+getPhotoUrlAtIndex index =
     case Array.get index photoArray of
         Just photo ->
             photo.url

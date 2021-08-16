@@ -21,6 +21,7 @@ import Browser
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onCheck, onClick)
+import Random
 
 
 urlPrefix : String
@@ -152,6 +153,11 @@ initialModel =
 photoArray : Array Photo
 photoArray =
     Array.fromList initialModel.photos
+
+
+randomPhotoPicker : Random.Generator Int
+randomPhotoPicker =
+    Random.int 0 (Array.length photoArray - 1)
 
 
 type ThumbnailSize

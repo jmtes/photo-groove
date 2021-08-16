@@ -48,7 +48,7 @@ view model =
     div [ class "content" ]
         [ h1 [] [ text "Photo Groove" ]
         , button
-            [ onClick { description = "ClickedSurpriseMe", data = "" } ]
+            [ onClick ClickedSurpriseMe ]
             [ text "Surprise Me!" ]
         , h3 [] [ text "Thumbail Size" ]
         , div
@@ -74,14 +74,23 @@ viewThumbnail selectedUrl thumb =
     img
         [ src (urlPrefix ++ url)
         , classList [ ( "selected", url == selectedUrl ) ]
-        , onClick { description = "ClickedPhoto", data = url }
+        , onClick (ClickedPhoto url)
         ]
         []
 
 
 viewSizeChooser : ThumbnailSize -> Html Msg
 viewSizeChooser size =
-    label [] [ input [ type_ "radio", name "size", id "size" ] [], text (sizeToString size) ]
+    label []
+        [ input
+            [ type_ "radio"
+            , name "size"
+            , id "size"
+            , onClick (ClickedSize size)
+            ]
+            []
+        , text (sizeToString size)
+        ]
 
 
 
@@ -182,28 +191,23 @@ getPhotoUrlAtIndex index =
 -- the new DOM
 
 
-type alias Msg =
-    { description : String, data : String }
+type Msg
+    = ClickedPhoto String
+    | ClickedSurpriseMe
+    | ClickedSize ThumbnailSize
 
 
 update : Msg -> Model -> Model
 update msg model =
-    let
-        desc =
-            msg.description
+    case msg of
+        ClickedPhoto photo ->
+            { model | selectedUrl = photo }
 
-        data =
-            msg.data
-    in
-    case desc of
-        "ClickedPhoto" ->
-            { model | selectedUrl = data }
-
-        "ClickedSurpriseMe" ->
+        ClickedSurpriseMe ->
             { model | selectedUrl = "2.jpeg" }
 
-        _ ->
-            model
+        ClickedSize size ->
+            { model | chosenSize = size }
 
 
 

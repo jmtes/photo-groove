@@ -20,7 +20,7 @@ import Array exposing (Array)
 import Browser
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (onClick)
+import Html.Events exposing (onCheck, onClick)
 
 
 urlPrefix : String
@@ -86,7 +86,7 @@ viewSizeChooser selectedSize size =
             [ type_ "radio"
             , name "size"
             , id "size"
-            , onClick (ClickedSize size)
+            , onCheck (\_ -> ClickedSize size)
             , checked (size == selectedSize)
             ]
             []

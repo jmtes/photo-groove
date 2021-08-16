@@ -53,7 +53,7 @@ view model =
         , h3 [] [ text "Thumbail Size" ]
         , div
             [ id "choose-size" ]
-            (List.map viewSizeChooser [ Small, Medium, Large ])
+            (List.map (viewSizeChooser size) [ Small, Medium, Large ])
         , div [ id "thumbnails", class (sizeToClass size) ]
             (List.map (viewThumbnail selected) photos)
         , img [ class "large", src (urlPrefix ++ "large/" ++ selected) ] []
@@ -79,14 +79,15 @@ viewThumbnail selectedUrl thumb =
         []
 
 
-viewSizeChooser : ThumbnailSize -> Html Msg
-viewSizeChooser size =
+viewSizeChooser : ThumbnailSize -> ThumbnailSize -> Html Msg
+viewSizeChooser selectedSize size =
     label []
         [ input
             [ type_ "radio"
             , name "size"
             , id "size"
             , onClick (ClickedSize size)
+            , checked (size == selectedSize)
             ]
             []
         , text (sizeToString size)

@@ -151,6 +151,32 @@ type ThumbnailSize
 
 
 
+-- Below, `Array.get` returns a `Maybe a`, which is essentially a container
+-- that can hold at most one value
+-- Maybes are used to represent the possible absence of a value without "null"
+-- or "undefined"
+-- Nothing is a Maybe *value*
+-- Just is a function that *returns* a Maybe value and is an example of a
+-- custom type variant, which means it can be destructured like a tuple!
+-- Below we destructure Just and name its contained value `photo`
+-- In English, the Just branch says the following: "This branch matches a Maybe
+-- value that was created using the Just variant. Extract that value that was
+-- passed to Just and name it photo"
+-- This case expression also doesn't need a default branch because Nothing and
+-- Just are the only ways to obtain a Maybe
+
+
+getPhotoAtIndex : Int -> String
+getPhotoAtIndex index =
+    case Array.get index photoArray of
+        Just photo ->
+            photo.url
+
+        Nothing ->
+            ""
+
+
+
 -- Messages are fed into the update function to produce new models
 -- After an update, the new model is sent to the view function to determine
 -- the new DOM

@@ -33,7 +33,7 @@ urlPrefix =
 -- User events such as clicks are translated into message values
 
 
-view : { photos : List Photo, selectedUrl : String } -> Html Msg
+view : Model -> Html Msg
 view model =
     let
         photos =
@@ -47,6 +47,10 @@ view model =
         , button
             [ onClick { description = "ClickedSurpriseMe", data = "" } ]
             [ text "Surprise Me!" ]
+        , h3 [] [ text "Thumbail Size" ]
+        , div
+            [ id "choose-size" ]
+            (List.map viewSizeChooser [ Small, Medium, Large ])
         , div [ id "thumbnails" ]
             (List.map (viewThumbnail selected) photos)
         , img [ class "large", src (urlPrefix ++ "large/" ++ selected) ] []
@@ -70,6 +74,29 @@ viewThumbnail selectedUrl thumb =
         , onClick { description = "ClickedPhoto", data = url }
         ]
         []
+
+
+viewSizeChooser : ThumbnailSize -> Html Msg
+viewSizeChooser size =
+    label [] [ input [ type_ "radio", name "size", id "size" ] [], text (sizeToString size) ]
+
+
+
+-- Below, Elm's compiler knows we've covered every possibility for `size`,
+-- so we don't need a default branch!
+
+
+sizeToString : ThumbnailSize -> String
+sizeToString size =
+    case size of
+        Small ->
+            "small"
+
+        Medium ->
+            "medium"
+
+        Large ->
+            "large"
 
 
 

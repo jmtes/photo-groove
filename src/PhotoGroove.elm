@@ -155,6 +155,11 @@ photoArray =
     Array.fromList initialModel.photos
 
 
+
+-- The type annotation below essentially means "a random generator that
+-- returns ints"
+
+
 randomPhotoPicker : Random.Generator Int
 randomPhotoPicker =
     Random.int 0 (Array.length photoArray - 1)
@@ -196,6 +201,12 @@ getPhotoUrlAtIndex index =
 -- Messages are fed into the update function to produce new models
 -- After an update, the new model is sent to the view function to determine
 -- the new DOM
+-- Msg is a custom type with four variants
+-- All of the variants are containers that hold different types of values
+-- Essentially, they're functions that return instances of Msg
+-- For example, ClickedPhoto is of type `String -> Msg`
+-- That is, except for ClickedSurpriseMe
+-- It simply *is* an instance of Msg
 
 
 type Msg
@@ -203,6 +214,14 @@ type Msg
     | ClickedSurpriseMe
     | ClickedSize ThumbnailSize
     | GotSelectedIndex Int
+
+
+
+-- Below, Random.generate is a Cmd
+-- It takes as its first arg the Msg to pass to update
+-- It takes as its second arg a function that returns the value to pass to
+-- the Msg (in this case the Int supplied to GotSelectedIndex) given that the
+-- Msg should hold a value (see comments right above)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -240,6 +259,8 @@ update msg model =
 -- Putting all these together, we can  read the below type annotation as "an
 -- Elm program with no flags, whose model type is Model and whose message type
 -- is Msg"
+-- It's kinda like making an arrow function that takes no args in JS?
+-- () => {...}
 
 
 main : Program () Model Msg

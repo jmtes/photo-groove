@@ -202,6 +202,7 @@ type Msg
     = ClickedPhoto String
     | ClickedSurpriseMe
     | ClickedSize ThumbnailSize
+    | GotSelectedIndex Int
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -211,17 +212,41 @@ update msg model =
             ( { model | selectedUrl = photo }, Cmd.none )
 
         ClickedSurpriseMe ->
-            ( { model | selectedUrl = "2.jpeg" }, Cmd.none )
+            ( model, Random.generate GotSelectedIndex randomPhotoPicker )
 
         ClickedSize size ->
             ( { model | chosenSize = size }, Cmd.none )
 
+        GotSelectedIndex index ->
+            ( { model | selectedUrl = getPhotoUrlAtIndex index }, Cmd.none )
 
 
--- Browser.sandbox wires together your state, how the page should look
+
+-- Browser.element wires together your state, how the page should look
 -- depending on the state, and how changes can be made to the state
+-- The init function takes flags as an arg and returns a tuple containing
+-- 1) the initial state and 2) a command to run when the app loads
+-- Since we don't need to do anything when the app loads, we passed Cmd.none
+-- The () in the type annotation is called a unit
+-- It contains no info whatsoever, but it's both a value and a type
+-- The () type can only be satisfied witht the () value
+-- As such, a function that takes *only* () only accepts one input and
+-- only returns one output
+-- Below, the () represents our flags type, which we aren't using right now
+-- Using () for our flags type indicates that we don't accept any flags!
+-- The `Model` means the type of our model is our custom type `Model`
+-- The `Msg` means that the type of message our update and view functions will
+-- use is our custom type `Msg`
+-- Putting all these together, we can  read the below type annotation as "an
+-- Elm program with no flags, whose model type is Model and whose message type
+-- is Msg"
 
 
 main : Program () Model Msg
 main =
-    Browser.sandbox { init = initialModel, view = view, update = update }
+    Browser.element
+        { init = \_ -> ( initialModel, Cmd.none )
+        , view = view
+        , update = update
+        , subscriptions = \_ -> Sub.none
+        }

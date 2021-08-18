@@ -32,6 +32,12 @@ urlPrefix =
 
 -- View function takes a model and returns a list of Html nodes
 -- User events such as clicks are translated into message values
+-- For reference, the <| acts like an opening parenthesis except it doesn't
+-- need a closer
+-- Both these lines do the same thing:
+-- String.toUpper (String.reverse "hello")
+-- String.toUpper <| String.reverse "hello"
+-- It's just that the latter looks a lot nicer
 
 
 view : Model -> Html Msg
@@ -43,8 +49,8 @@ view model =
         size =
             model.chosenSize
     in
-    div [ class "content" ]
-        (case status of
+    div [ class "content" ] <|
+        case status of
             Loaded photos selected ->
                 viewLoaded photos selected size
 
@@ -53,7 +59,6 @@ view model =
 
             Errored errorMessage ->
                 [ text ("Error: " ++ errorMessage) ]
-        )
 
 
 viewLoaded : List Photo -> String -> ThumbnailSize -> List (Html Msg)

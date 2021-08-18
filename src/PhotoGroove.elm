@@ -37,28 +37,39 @@ urlPrefix =
 view : Model -> Html Msg
 view model =
     let
-        photos =
-            model.photos
-
-        selected =
-            model.selectedUrl
+        status =
+            model.status
 
         size =
             model.chosenSize
     in
     div [ class "content" ]
-        [ h1 [] [ text "Photo Groove" ]
-        , button
-            [ onClick ClickedSurpriseMe ]
-            [ text "Surprise Me!" ]
-        , h3 [] [ text "Thumbail Size" ]
-        , div
-            [ id "choose-size" ]
-            (List.map (viewSizeChooser size) [ Small, Medium, Large ])
-        , div [ id "thumbnails", class (sizeToClass size) ]
-            (List.map (viewThumbnail selected) photos)
-        , img [ class "large", src (urlPrefix ++ "large/" ++ selected) ] []
-        ]
+        (case status of
+            Loaded photos selected ->
+                viewLoaded photos selected size
+
+            Loading ->
+                []
+
+            Errored errorMessage ->
+                [ text ("Error: " ++ errorMessage) ]
+        )
+
+
+viewLoaded : List Photo -> String -> ThumbnailSize -> List (Html Msg)
+viewLoaded photos selected size =
+    [ h1 [] [ text "Photo Groove" ]
+    , button
+        [ onClick ClickedSurpriseMe ]
+        [ text "Surprise Me!" ]
+    , h3 [] [ text "Thumbail Size" ]
+    , div
+        [ id "choose-size" ]
+        (List.map (viewSizeChooser size) [ Small, Medium, Large ])
+    , div [ id "thumbnails", class (sizeToClass size) ]
+        (List.map (viewThumbnail selected) photos)
+    , img [ class "large", src (urlPrefix ++ "large/" ++ selected) ] []
+    ]
 
 
 
@@ -134,18 +145,19 @@ type alias Photo =
     { url : String }
 
 
+type Status
+    = Loading
+    | Loaded (List Photo) String
+    | Errored String
+
+
 type alias Model =
-    { photos : List Photo, selectedUrl : String, chosenSize : ThumbnailSize }
+    { status : Status, chosenSize : ThumbnailSize }
 
 
 initialModel : Model
 initialModel =
-    { photos =
-        [ { url = "1.jpeg" }
-        , { url = "2.jpeg" }
-        , { url = "3.jpeg" }
-        ]
-    , selectedUrl = "1.jpeg"
+    { status = Loading
     , chosenSize = Medium
     }
 

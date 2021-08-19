@@ -261,7 +261,7 @@ update msg model =
                         (firstUrl :: _) as urls ->
                             let
                                 photos =
-                                    List.map (\url -> { url = url }) urls
+                                    List.map Photo urls
                             in
                             ( { model | status = Loaded photos firstUrl }
                             , Cmd.none

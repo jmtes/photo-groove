@@ -16,7 +16,6 @@ module PhotoGroove exposing (main)
 -- but it's best to try to be as specific as possible with your imports to
 -- prevent name ambiguity and confusion
 
-import Array exposing (Array)
 import Browser
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -167,51 +166,10 @@ initialModel =
     }
 
 
-photoArray : Array Photo
-photoArray =
-    Array.fromList initialModel.photos
-
-
-
--- The type annotation below essentially means "a random generator that
--- returns ints"
-
-
-randomPhotoPicker : Random.Generator Int
-randomPhotoPicker =
-    Random.int 0 (Array.length photoArray - 1)
-
-
 type ThumbnailSize
     = Small
     | Medium
     | Large
-
-
-
--- Below, `Array.get` returns a `Maybe a`, which is essentially a container
--- that can hold at most one value
--- Maybes are used to represent the possible absence of a value without "null"
--- or "undefined"
--- Nothing is a Maybe *value*
--- Just is a function that *returns* a Maybe value and is an example of a
--- custom type variant, which means it can be destructured like a tuple!
--- Below we destructure Just and name its contained value `photo`
--- In English, the Just branch says the following: "This branch matches a Maybe
--- value that was created using the Just variant. Extract that value that was
--- passed to Just and name it photo"
--- This case expression also doesn't need a default branch because Nothing and
--- Just are the only ways to obtain a Maybe
-
-
-getPhotoUrlAtIndex : Int -> String
-getPhotoUrlAtIndex index =
-    case Array.get index photoArray of
-        Just photo ->
-            photo.url
-
-        Nothing ->
-            ""
 
 
 
@@ -244,8 +202,8 @@ type Msg
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        ClickedPhoto photo ->
-            ( { model | selectedUrl = photo }, Cmd.none )
+        ClickedPhoto url ->
+            ( { model | status = selectUrl url model.status }, Cmd.none )
 
         ClickedSurpriseMe ->
             ( model, Random.generate GotSelectedIndex randomPhotoPicker )
@@ -254,7 +212,22 @@ update msg model =
             ( { model | chosenSize = size }, Cmd.none )
 
         GotSelectedIndex index ->
-            ( { model | selectedUrl = getPhotoUrlAtIndex index }, Cmd.none )
+            ( { model | status = selectUrl (getPhotoUrlAtIndex index) model.status }
+            , Cmd.none
+            )
+
+
+selectUrl : String -> Status -> Status
+selectUrl url status =
+    case status of
+        Loaded photos _ ->
+            Loaded photos url
+
+        Loading ->
+            status
+
+        Errored _ ->
+            status
 
 
 

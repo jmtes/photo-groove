@@ -197,6 +197,13 @@ type Msg
 -- It takes as its second arg a function that returns the value to pass to
 -- the Msg (in this case the Int supplied to GotSelectedIndex) given that the
 -- Msg should hold a value (see comments right above)
+-- In the (firstPhoto :: otherPhotos) expression below, we're essentialy
+-- saying "Give me the first photo and then a list of the other photos"
+-- So the type of firstPhoto would be Photo, while that of otherPhotos would
+-- be List Photo
+-- Whenever you encounter a function like Random.uniform that takes a non
+-- empty list, using the :: pattern in a case expression is often a good way
+-- to obtain the arguments it needs
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -206,7 +213,17 @@ update msg model =
             ( { model | status = selectUrl url model.status }, Cmd.none )
 
         ClickedSurpriseMe ->
-            ( model, Random.generate GotSelectedIndex randomPhotoPicker )
+            case model.status of
+                Loaded (firstPhoto :: otherPhotos) _ ->
+                    ( model
+                    , Random.generate GotRandomPhoto <| Random.uniform firstPhoto otherPhotos
+                    )
+
+                Loading ->
+                    ( model, Cmd.none )
+
+                Errored _ ->
+                    ( model, Cmd.none )
 
         ClickedSize size ->
             ( { model | chosenSize = size }, Cmd.none )

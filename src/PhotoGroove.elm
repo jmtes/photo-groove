@@ -220,7 +220,7 @@ update msg model =
                         Random.uniform firstPhoto otherPhotos
                     )
 
-                Loaded _ _ ->
+                Loaded [] _ ->
                     ( model, Cmd.none )
 
                 Loading ->

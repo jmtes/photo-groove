@@ -6,6 +6,14 @@ class RangeSlider extends HTMLElement {
 
     // Add <input> to the DOM inside the <range-slider>
     this.appendChild(input);
+
+    // The first two options in the config are the values we set in Elm!
+    const jsr = new JSR(input, {
+      max: this.max,
+      values: [this.val],
+      sliders: 1,
+      grid: false
+    })
   }
 }
 

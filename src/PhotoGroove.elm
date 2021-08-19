@@ -254,26 +254,24 @@ update msg model =
             , Cmd.none
             )
 
-        GotPhotos result ->
-            case result of
-                Ok responseStr ->
-                    case String.split "," responseStr of
-                        (firstUrl :: _) as urls ->
-                            let
-                                photos =
-                                    List.map Photo urls
-                            in
-                            ( { model | status = Loaded photos firstUrl }
-                            , Cmd.none
-                            )
+        GotPhotos (Ok responseStr) ->
+            case String.split "," responseStr of
+                (firstUrl :: _) as urls ->
+                    let
+                        photos =
+                            List.map Photo urls
+                    in
+                    ( { model | status = Loaded photos firstUrl }
+                    , Cmd.none
+                    )
 
-                        [] ->
-                            ( { model | status = Errored "No photos found" }
-                            , Cmd.none
-                            )
+                [] ->
+                    ( { model | status = Errored "No photos found" }
+                    , Cmd.none
+                    )
 
-                Err httpError ->
-                    ( { model | status = Errored "Server error" }, Cmd.none )
+        GotPhotos (Err httpError) ->
+            ( { model | status = Errored "Server error" }, Cmd.none )
 
 
 selectUrl : String -> Status -> Status

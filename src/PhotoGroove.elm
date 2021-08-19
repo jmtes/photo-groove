@@ -20,6 +20,7 @@ import Browser
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onCheck, onClick)
+import Http
 import Random
 
 
@@ -196,6 +197,7 @@ type Msg
     | ClickedSurpriseMe
     | ClickedSize ThumbnailSize
     | GotRandomPhoto Photo
+    | GotPhotos (Result Http.Error String)
 
 
 
@@ -213,6 +215,13 @@ type Msg
 -- to obtain the arguments it needs
 -- When using pipelines, the order of the functions from top-down is pretty
 -- much the reverse of what it'd be with parentheses
+-- In the GotPhotos branch, what `(firstUrl :: _) as urls` means is:
+-- "Give the name `urls` to the entire List, while also subdividing it into
+-- its first element, which we will name `firstUrl`, and its remaining
+-- elements, which we will decline to name because we won't use them"
+-- `as` can also be used to destructure function arguments, i.e:
+-- doSomethingWithTuple ((first, second) as tuple) = ...
+-- doSomethingWithRecord ({username, password} as user) = ...
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -244,6 +253,27 @@ update msg model =
             ( { model | status = selectUrl photo.url model.status }
             , Cmd.none
             )
+
+        GotPhotos result ->
+            case result of
+                Ok responseStr ->
+                    case String.split "," responseStr of
+                        (firstUrl :: _) as urls ->
+                            let
+                                photos =
+                                    List.map (\url -> { url = url }) urls
+                            in
+                            ( { model | status = Loaded photos firstUrl }
+                            , Cmd.none
+                            )
+
+                        [] ->
+                            ( { model | status = Errored "No photos found" }
+                            , Cmd.none
+                            )
+
+                Err httpError ->
+                    ( { model | status = Errored "Server error" }, Cmd.none )
 
 
 selectUrl : String -> Status -> Status

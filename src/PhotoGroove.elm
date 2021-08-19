@@ -149,6 +149,13 @@ type alias Photo =
     { url : String }
 
 
+
+-- Our data model now represents three distinct states
+-- Since we store `photos` and `selectedUrl` inside the Loaded variant, there
+-- is no way to access those values from the Loading or Errored states
+-- This prevents "impossible states"!
+
+
 type Status
     = Loading
     | Loaded (List Photo) String

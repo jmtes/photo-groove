@@ -18,11 +18,12 @@ module PhotoGroove exposing (main)
 
 import Browser
 import Html exposing (..)
-import Html.Attributes exposing (..)
+import Html.Attributes as Attr exposing (..)
 import Html.Events exposing (onCheck, onClick)
 import Http
 import Json.Decode exposing (Decoder, int, list, string, succeed)
 import Json.Decode.Pipeline exposing (optional, required)
+import Json.Encode as Encode
 import Random
 
 
@@ -117,6 +118,33 @@ viewSizeChooser selectedSize size =
             ]
             []
         , text (sizeToString size)
+        ]
+
+
+
+-- Contrary to what the name suggests, we're not actually using Encode to
+-- create a JSON string
+-- Rather, we're encoding a JS Value for the Html.Attributes.property function
+-- This sets a JS *property* on this <range-slider> node so that our custom
+-- element can read it later
+-- The property will be named `val` and it will be set to the value of
+-- `magnitude`
+-- Encode.int specifies what the property's type will be on the JS side,
+-- in this case an int
+-- If we had used Encode.string (String.fromInt magnitude) instead, the
+-- property would have been set to a string on the JS side
+
+
+viewFilter : String -> Int -> Html Msg
+viewFilter name magnitude =
+    div [ class "filter-slider" ]
+        [ label [] [ text name ]
+        , rangeSlider
+            [ Attr.max "11"
+            , Attr.property "val" (Encode.int magnitude)
+            ]
+            []
+        , label [] [ text (String.fromInt magnitude) ]
         ]
 
 
@@ -362,3 +390,8 @@ main =
         , update = update
         , subscriptions = \_ -> Sub.none
         }
+
+
+rangeSlider : List (Attribute msg) -> List (Html msg) -> Html msg
+rangeSlider attributes children =
+    node "range-slider" attributes children

@@ -147,7 +147,10 @@ sizeToClass size =
 
 
 type alias Photo =
-    { url : String }
+    { url : String
+    , size : Int
+    , title : String
+    }
 
 
 

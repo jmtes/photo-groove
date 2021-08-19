@@ -89,9 +89,16 @@ viewThumbnail selectedUrl thumb =
     let
         url =
             thumb.url
+
+        photoTitle =
+            thumb.title
+
+        size =
+            thumb.size
     in
     img
         [ src (urlPrefix ++ url)
+        , title (photoTitle ++ " [" ++ String.fromInt size ++ " kb]")
         , classList [ ( "selected", url == selectedUrl ) ]
         , onClick (ClickedPhoto url)
         ]

@@ -138,6 +138,8 @@ viewSizeChooser selectedSize size =
 -- in this case an int
 -- If we had used Encode.string (String.fromInt magnitude) instead, the
 -- property would have been set to a string on the JS side
+-- Note: Elm applies special handling to the `value` property, so it's best
+-- not to use that name for custom properties
 
 
 viewFilter : String -> Int -> Html Msg

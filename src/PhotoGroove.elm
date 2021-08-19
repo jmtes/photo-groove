@@ -21,8 +21,8 @@ import Html exposing (..)
 import Html.Attributes as Attr exposing (..)
 import Html.Events exposing (onCheck, onClick)
 import Http
-import Json.Decode exposing (Decoder, int, list, string, succeed)
-import Json.Decode.Pipeline exposing (optional, required)
+import Json.Decode as Decode exposing (Decoder, int, list, string, succeed)
+import Json.Decode.Pipeline as DecodePipeline exposing (optional, required)
 import Json.Encode as Encode
 import Random
 
@@ -213,8 +213,8 @@ type alias Photo =
 photoDecoder : Decoder Photo
 photoDecoder =
     succeed Photo
-        |> Json.Decode.Pipeline.required "url" string
-        |> Json.Decode.Pipeline.required "size" int
+        |> DecodePipeline.required "url" string
+        |> DecodePipeline.required "size" int
         |> optional "title" string "Untitled"
 
 
@@ -355,7 +355,7 @@ initialCmd : Cmd Msg
 initialCmd =
     Http.get
         { url = "http://elm-in-action.com/photos/list.json"
-        , expect = Http.expectJson GotPhotos (Json.Decode.list photoDecoder)
+        , expect = Http.expectJson GotPhotos (Decode.list photoDecoder)
         }
 
 

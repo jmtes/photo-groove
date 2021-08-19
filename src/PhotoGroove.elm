@@ -204,6 +204,8 @@ type Msg
 -- Whenever you encounter a function like Random.uniform that takes a non
 -- empty list, using the :: pattern in a case expression is often a good way
 -- to obtain the arguments it needs
+-- When using pipelines, the order of the functions from top-down is pretty
+-- much the reverse of what it'd be with parentheses
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )

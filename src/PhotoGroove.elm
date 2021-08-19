@@ -188,7 +188,7 @@ type Msg
     = ClickedPhoto String
     | ClickedSurpriseMe
     | ClickedSize ThumbnailSize
-    | GotSelectedIndex Int
+    | GotRandomPhoto Photo
 
 
 
@@ -216,8 +216,12 @@ update msg model =
             case model.status of
                 Loaded (firstPhoto :: otherPhotos) _ ->
                     ( model
-                    , Random.generate GotRandomPhoto <| Random.uniform firstPhoto otherPhotos
+                    , Random.generate GotRandomPhoto <|
+                        Random.uniform firstPhoto otherPhotos
                     )
+
+                Loaded _ _ ->
+                    ( model, Cmd.none )
 
                 Loading ->
                     ( model, Cmd.none )
@@ -228,8 +232,8 @@ update msg model =
         ClickedSize size ->
             ( { model | chosenSize = size }, Cmd.none )
 
-        GotSelectedIndex index ->
-            ( { model | status = selectUrl (getPhotoUrlAtIndex index) model.status }
+        GotRandomPhoto photo ->
+            ( { model | status = selectUrl photo.url model.status }
             , Cmd.none
             )
 

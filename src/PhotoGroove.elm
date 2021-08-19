@@ -21,6 +21,8 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onCheck, onClick)
 import Http
+import Json.Decode exposing (Decoder, int, list, string, succeed)
+import Json.Decode.Pipeline exposing (optional, required)
 import Random
 
 
@@ -151,6 +153,34 @@ type alias Photo =
     , size : Int
     , title : String
     }
+
+
+
+-- Below, `succeed Photo` begins the pipeline
+-- It says our decoder will decode the arguments to Photo one by one
+-- Ultimately the whole decoder will succeed unless any steps in the pipeline
+-- fails
+-- Because Photo accepts 3 arguments, we'll need 3 pipeline steps or else the
+-- compiler will give us an error
+-- `required "url" string` says that what we're decoding has to be JSON object
+-- with a field "url" containing a string
+-- Decoding could fail at this step either because the "url" field is missing
+-- or it's present but not a string value
+-- `optional "title" string "Untitled"` says that if the "title" field is
+-- missing or null, we'll default to it being "Untitled" when we build the
+-- Photo
+-- The decoder type returned from each step in the pipeline must match the
+-- corresponding arg in the succeed function
+-- In this example, because Photo takes a String as its first arg, the first
+-- step in the pipeline has to return a decoder containing a String
+
+
+photoDecoder : Decoder Photo
+photoDecoder =
+    succeed Photo
+        |> Json.Decode.Pipeline.required "url" string
+        |> Json.Decode.Pipeline.required "size" int
+        |> optional "title" string "Untitled"
 
 
 

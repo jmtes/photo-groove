@@ -343,7 +343,7 @@ update msg model =
 
         GotPhotos (Ok photos) ->
             case photos of
-                first :: rest ->
+                first :: _ ->
                     ( { model | status = Loaded photos first.url }
                     , Cmd.none
                     )
@@ -353,7 +353,7 @@ update msg model =
                     , Cmd.none
                     )
 
-        GotPhotos (Err httpError) ->
+        GotPhotos (Err _) ->
             ( { model | status = Errored "Server error" }, Cmd.none )
 
         SlidHue hue ->

@@ -41,6 +41,9 @@ urlPrefix =
 -- String.toUpper (String.reverse "hello")
 -- String.toUpper <| String.reverse "hello"
 -- It's just that the latter looks a lot nicer
+-- Note: It's generally a good idea to keep our types as narrow as possible,
+-- so we'd like to avoid passing `viewLoaded` the entire `Model` if we can
+-- That's not a refactor we need to do right now, though
 
 
 view : Model -> Html Msg
@@ -48,14 +51,11 @@ view model =
     let
         status =
             model.status
-
-        size =
-            model.chosenSize
     in
     div [ class "content" ] <|
         case status of
             Loaded photos selected ->
-                viewLoaded photos selected size
+                viewLoaded photos selected model
 
             Loading ->
                 []
@@ -64,16 +64,23 @@ view model =
                 [ text ("Error: " ++ errorMessage) ]
 
 
-viewLoaded : List Photo -> String -> ThumbnailSize -> List (Html Msg)
-viewLoaded photos selected size =
+viewLoaded : List Photo -> String -> Model -> List (Html Msg)
+viewLoaded photos selected model =
+    let
+        size =
+            model.chosenSize
+
+        { hue, ripple, noise } =
+            model
+    in
     [ h1 [] [ text "Photo Groove" ]
     , button
         [ onClick ClickedSurpriseMe ]
         [ text "Surprise Me!" ]
     , div [ class "filters" ]
-        [ viewFilter SlidHue "Hue" 0
-        , viewFilter SlidRipple "Ripple" 0
-        , viewFilter SlidNoise "Noise" 0
+        [ viewFilter SlidHue "Hue" hue
+        , viewFilter SlidRipple "Ripple" ripple
+        , viewFilter SlidNoise "Noise" noise
         ]
     , h3 [] [ text "Thumbail Size" ]
     , div

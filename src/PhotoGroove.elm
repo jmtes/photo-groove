@@ -4,9 +4,11 @@
 -- We'e only exposing `main` for use in other modules
 -- This means other modules can't import `model` from here, for example
 -- In general, it's best to expose as little as possible!
+-- Since we're using ports, we have to say `port module` instead of just
+-- `module`
 
 
-module PhotoGroove exposing (main)
+port module PhotoGroove exposing (main)
 
 -- Import other modules
 -- We're exposing *all* exports from `Html` into the global scope
@@ -192,6 +194,21 @@ sizeToClass size =
 
         Large ->
             "large"
+
+
+
+-- Below we're declaring a function called `setFilters` that takes in
+-- FilterOptions and returs a Cmd msg
+-- We don't write an implementation for this function because the `port`
+-- keyword does it for us, all it needs is the type
+-- All port functions that send data to JS follow this pattern:
+-- 1. The port keyword is followed by a function name and type annotation
+-- 2. The type annotation must be for a function that takes one arg
+-- 3. The function MUST return a `Cmd msg`, nothing else
+-- Not even a `Cmd Msg`!
+
+
+port setFilters : FilterOptions -> Cmd msg
 
 
 

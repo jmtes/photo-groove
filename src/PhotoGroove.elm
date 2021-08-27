@@ -194,6 +194,18 @@ sizeToClass size =
             "large"
 
 
+
+-- This is the data we're going to send to JS
+-- In order to apply filters, the JS library we're going to use needs the
+-- photo URL and a list of filters and their magnitudes
+
+
+type alias FilterOptions =
+    { url : String
+    , filters : List { name : String, amount : Int }
+    }
+
+
 type alias Photo =
     { url : String
     , size : Int

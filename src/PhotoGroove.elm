@@ -194,10 +194,6 @@ sizeToClass size =
             "large"
 
 
-
--- Model represents app state
-
-
 type alias Photo =
     { url : String
     , size : Int
@@ -244,6 +240,10 @@ type Status
     = Loading
     | Loaded (List Photo) String
     | Errored String
+
+
+
+-- Model represents app state
 
 
 type alias Model =

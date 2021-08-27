@@ -282,6 +282,9 @@ type Msg
     | ClickedSize ThumbnailSize
     | GotRandomPhoto Photo
     | GotPhotos (Result Http.Error (List Photo))
+    | SlidHue Int
+    | SlidRipple Int
+    | SlidNoise Int
 
 
 
@@ -352,6 +355,15 @@ update msg model =
 
         GotPhotos (Err httpError) ->
             ( { model | status = Errored "Server error" }, Cmd.none )
+
+        SlidHue hue ->
+            ( { model | hue = hue }, Cmd.none )
+
+        SlidRipple ripple ->
+            ( { model | ripple = ripple }, Cmd.none )
+
+        SlidNoise noise ->
+            ( { model | noise = noise }, Cmd.none )
 
 
 selectUrl : String -> Status -> Status

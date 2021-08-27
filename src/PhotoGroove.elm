@@ -19,10 +19,10 @@ module PhotoGroove exposing (main)
 import Browser
 import Html exposing (..)
 import Html.Attributes as Attr exposing (..)
-import Html.Events exposing (onCheck, onClick)
+import Html.Events exposing (on, onCheck, onClick)
 import Http
-import Json.Decode as Decode exposing (Decoder, int, list, string, succeed)
-import Json.Decode.Pipeline as DecodePipeline exposing (optional, required)
+import Json.Decode as Decode exposing (Decoder, at, int, string, succeed)
+import Json.Decode.Pipeline as DecodePipeline exposing (optional)
 import Json.Encode as Encode
 import Random
 
@@ -402,3 +402,22 @@ main =
 rangeSlider : List (Attribute msg) -> List (Html msg) -> Html msg
 rangeSlider attributes children =
     node "range-slider" attributes children
+
+
+
+-- detailUserSlidTo decodes the integer located at event.detail.userSlidTo
+-- msgDecoder converts that integer to a message using toMsg
+
+
+onSlide : (Int -> msg) -> Attribute msg
+onSlide toMsg =
+    let
+        detailUserSlidTo : Decoder Int
+        detailUserSlidTo =
+            at [ "detail", "userSlidTo" ] int
+
+        msgDecoder : Decoder msg
+        msgDecoder =
+            Decode.map toMsg detailUserSlidTo
+    in
+    on "slide" msgDecoder

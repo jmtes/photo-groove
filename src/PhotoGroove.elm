@@ -240,13 +240,21 @@ type Status
 
 
 type alias Model =
-    { status : Status, chosenSize : ThumbnailSize }
+    { status : Status
+    , chosenSize : ThumbnailSize
+    , hue : Int
+    , ripple : Int
+    , noise : Int
+    }
 
 
 initialModel : Model
 initialModel =
     { status = Loading
     , chosenSize = Medium
+    , hue = 0
+    , ripple = 0
+    , noise = 0
     }
 
 

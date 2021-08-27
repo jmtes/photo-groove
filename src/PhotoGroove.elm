@@ -71,9 +71,9 @@ viewLoaded photos selected size =
         [ onClick ClickedSurpriseMe ]
         [ text "Surprise Me!" ]
     , div [ class "filters" ]
-        [ viewFilter "Hue" 0
-        , viewFilter "Ripple" 0
-        , viewFilter "Noise" 0
+        [ viewFilter SlidHue "Hue" 0
+        , viewFilter SlidRipple "Ripple" 0
+        , viewFilter SlidNoise "Noise" 0
         ]
     , h3 [] [ text "Thumbail Size" ]
     , div

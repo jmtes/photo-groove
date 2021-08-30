@@ -206,6 +206,17 @@ sizeToClass size =
 -- 2. The type annotation must be for a function that takes one arg
 -- 3. The function MUST return a `Cmd msg`, nothing else
 -- Not even a `Cmd Msg`!
+-- A `Cmd msg` by itself like this is a command that produces no message after
+-- it completes
+-- As such, both `Cmd.none` and `setFilters` produce no message after
+-- completing
+-- The difference is that Cmd.none has no effects, while setFilters performs
+-- the effect of sending data to JS (specifically, it will send the
+-- filterOptions data we pass to it)
+-- You can think of setFilters as a "fire and forget" command
+-- Note: Although HTTP requests can fail, sending data to JS cannot
+-- We don't miss out on any error-handling opportunities just because
+-- setFilters sends no message back to `update`
 
 
 port setFilters : FilterOptions -> Cmd msg

@@ -361,8 +361,21 @@ type Msg
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        ClickedPhoto url ->
-            ( { model | status = selectUrl url model.status }, Cmd.none )
+        ClickedPhoto selectedUrl ->
+            let
+                filters =
+                    [ { name = "Hue", amount = model.hue }
+                    , { name = "Ripple", amount = model.ripple }
+                    , { name = "Noise", amount = model.noise }
+                    ]
+
+                url =
+                    urlPrefix ++ "large/" ++ selectedUrl
+
+                cmd =
+                    setFilters { url = url, filters = filters }
+            in
+            ( { model | status = selectUrl url model.status }, cmd )
 
         ClickedSurpriseMe ->
             case model.status of

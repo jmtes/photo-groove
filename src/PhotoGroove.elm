@@ -361,21 +361,8 @@ type Msg
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        ClickedPhoto selectedUrl ->
-            let
-                filters =
-                    [ { name = "Hue", amount = model.hue }
-                    , { name = "Ripple", amount = model.ripple }
-                    , { name = "Noise", amount = model.noise }
-                    ]
-
-                url =
-                    urlPrefix ++ "large/" ++ selectedUrl
-
-                cmd =
-                    setFilters { url = url, filters = filters }
-            in
-            ( { model | status = selectUrl url model.status }, cmd )
+        ClickedPhoto url ->
+            applyFilters { model | status = selectUrl url model.status }
 
         ClickedSurpriseMe ->
             case model.status of
@@ -397,9 +384,7 @@ update msg model =
             ( { model | chosenSize = size }, Cmd.none )
 
         GotRandomPhoto photo ->
-            ( { model | status = selectUrl photo.url model.status }
-            , Cmd.none
-            )
+            applyFilters { model | status = selectUrl photo.url model.status }
 
         GotPhotos (Ok photos) ->
             case photos of
@@ -424,6 +409,29 @@ update msg model =
 
         SlidNoise noise ->
             ( { model | noise = noise }, Cmd.none )
+
+
+applyFilters : Model -> ( Model, Cmd Msg )
+applyFilters model =
+    case model.status of
+        Loaded _ selectedUrl ->
+            let
+                filters =
+                    [ { name = "Hue", amount = model.hue }
+                    , { name = "Ripple", amount = model.ripple }
+                    , { name = "Noise", amount = model.noise }
+                    ]
+
+                url =
+                    urlPrefix ++ "large/" ++ selectedUrl
+            in
+            ( model, setFilters { url = url, filters = filters } )
+
+        Loading ->
+            ( model, Cmd.none )
+
+        Errored _ ->
+            ( model, Cmd.none )
 
 
 selectUrl : String -> Status -> Status

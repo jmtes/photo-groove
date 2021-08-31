@@ -11,8 +11,6 @@
     <script src="http://elm-in-action.com/pasta.js"></script>
     <script src="app.js"></script>
     <script>
-      const canvas = document.getElementById('main-canvas');
-
       // init returns an object that lets us subscribe to data
       // Elm sends to JS via ports
       const app = Elm.PhotoGroove.init({
@@ -24,7 +22,15 @@
       // The options arg is the FilterOptions record that Elm sent over,
       // but converted to a JS object
       app.ports.setFilters.subscribe((options) => {
-        Pasta.apply(canvas, options);
+        // requestAnimationFrame allows code to run just before the
+        // browser's next repaint
+        // Because this is when the Elm runtime will schedule its
+        // next DOM update, we can use it to delay getting our canvas
+        // element until our next call to `view` has added the canvas
+        // we need to the DOM
+        requestAnimationFrame(() => {
+          Pasta.apply(document.getElementById('main-canvas'), options);
+        });
       });
     </script>
   </body>

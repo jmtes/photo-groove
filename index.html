@@ -11,7 +11,21 @@
     <script src="http://elm-in-action.com/pasta.js"></script>
     <script src="app.js"></script>
     <script>
-      Elm.PhotoGroove.init({ node: document.getElementById('app') });
+      const canvas = document.getElementById('main-canvas');
+
+      // init returns an object that lets us subscribe to data
+      // Elm sends to JS via ports
+      const app = Elm.PhotoGroove.init({
+        node: document.getElementById('app'),
+      });
+
+      // When the Elm runtime executes the Cmd returned by setFilters,
+      // the callback passed here wll run
+      // The options arg is the FilterOptions record that Elm sent over,
+      // but converted to a JS object
+      app.ports.setFilters.subscribe((options) => {
+        Pasta.apply(canvas, options);
+      });
     </script>
   </body>
 </html>

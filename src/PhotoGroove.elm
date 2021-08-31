@@ -402,13 +402,13 @@ update msg model =
             ( { model | status = Errored "Server error" }, Cmd.none )
 
         SlidHue hue ->
-            ( { model | hue = hue }, Cmd.none )
+            applyFilters { model | hue = hue }
 
         SlidRipple ripple ->
-            ( { model | ripple = ripple }, Cmd.none )
+            applyFilters { model | ripple = ripple }
 
         SlidNoise noise ->
-            ( { model | noise = noise }, Cmd.none )
+            applyFilters { model | noise = noise }
 
 
 applyFilters : Model -> ( Model, Cmd Msg )

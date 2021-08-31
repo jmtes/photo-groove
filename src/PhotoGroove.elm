@@ -508,8 +508,23 @@ main =
         { init = \_ -> ( initialModel, initialCmd )
         , view = view
         , update = update
-        , subscriptions = \_ -> Sub.none
+        , subscriptions = subscriptions
         }
+
+
+
+-- When JS sends a string to the activityChanges port, it will result in a
+-- GotActivity message being sent to `update`
+-- Whenever our model changes, the new model is passed to this function,
+-- giving us a chance to return a different Sub depending on what's in the
+-- new model
+-- This lets us dynamically control which subscriptions our program pays
+-- attention to
+
+
+subscriptions : Model -> Sub Msg
+subscriptions _ =
+    activityChanges GotActivity
 
 
 rangeSlider : List (Attribute msg) -> List (Html msg) -> Html msg

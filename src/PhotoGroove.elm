@@ -520,6 +520,8 @@ main =
 -- new model
 -- This lets us dynamically control which subscriptions our program pays
 -- attention to
+-- Below, what we're basically saying is "wrap whatever string JS gives us
+-- through the activityChanges port inside a GotActivity message"
 
 
 subscriptions : Model -> Sub Msg

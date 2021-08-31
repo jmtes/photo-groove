@@ -34,9 +34,10 @@
       });
 
       // Pasta calls this function whenever its activity changes
-      Pasta.addActivityListener((activity) =>
-        console.log('Got some activity to send to Elm: ', activity)
-      );
+      Pasta.addActivityListener((activity) => {
+        console.log('Got some activity to send to Elm: ', activity);
+        app.ports.activityChanges.send(activity);
+      });
     </script>
   </body>
 </html>

@@ -72,13 +72,14 @@ viewLoaded photos selected model =
         size =
             model.chosenSize
 
-        { hue, ripple, noise } =
+        { hue, ripple, noise, activity } =
             model
     in
     [ h1 [] [ text "Photo Groove" ]
     , button
         [ onClick ClickedSurpriseMe ]
         [ text "Surprise Me!" ]
+    , div [ class "activity" ] [ text activity ]
     , div [ class "filters" ]
         [ viewFilter SlidHue "Hue" hue
         , viewFilter SlidRipple "Ripple" ripple
@@ -292,6 +293,7 @@ type alias Model =
     , hue : Int
     , ripple : Int
     , noise : Int
+    , activity : String
     }
 
 
@@ -302,6 +304,7 @@ initialModel =
     , hue = 0
     , ripple = 0
     , noise = 0
+    , activity = ""
     }
 
 
@@ -332,6 +335,7 @@ type Msg
     | SlidHue Int
     | SlidRipple Int
     | SlidNoise Int
+    | GotActivity String
 
 
 
@@ -410,6 +414,9 @@ update msg model =
 
         SlidNoise noise ->
             applyFilters { model | noise = noise }
+
+        GotActivity activity ->
+            ( { model | activity = activity }, Cmd.none )
 
 
 applyFilters : Model -> ( Model, Cmd Msg )

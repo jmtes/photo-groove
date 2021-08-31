@@ -224,6 +224,22 @@ port setFilters : FilterOptions -> Cmd msg
 
 
 
+-- A subcription is a way to translate certain events outside of our program
+-- into messages that get sent to our `update` function
+-- For example, you can use a subscription to handle user inputs that aren't
+-- tied to any specific DOM element, like window resizes
+-- Below, `msg` refers to the type of message returned by the (String -> msg)
+-- function we pass to `activityChanges`
+-- While a `Cmd msg` sends no message to `update`, it would be strange for
+-- a `Sub msg` to do the same
+-- This is because subscriptions, unlike commands, do not run effects
+-- Their whole purpose is to send messages to `update`!
+
+
+port activityChanges : (String -> msg) -> Sub msg
+
+
+
 -- This is the data we're going to send to JS
 -- In order to apply filters, the JS library we're going to use needs the
 -- photo URL and a list of filters and their magnitudes

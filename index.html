@@ -32,6 +32,11 @@
           Pasta.apply(document.getElementById('main-canvas'), options);
         });
       });
+
+      // Pasta calls this function whenever its activity changes
+      Pasta.addActivityListener((activity) =>
+        console.log('Got some activity to send to Elm: ', activity)
+      );
     </script>
   </body>
 </html>
